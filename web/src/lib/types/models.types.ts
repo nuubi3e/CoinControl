@@ -6,7 +6,7 @@ export interface IUserSchema {
   fullname: string
   emailId: string
   password: string
-  confirmPassword: string
+  confirmPassword: string | undefined
   status: 'active' | 'registered'
 }
 

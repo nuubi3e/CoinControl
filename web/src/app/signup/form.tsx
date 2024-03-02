@@ -8,9 +8,10 @@ import { TbTxt } from 'react-icons/tb'
 import { FiUnlock, FiLock } from 'react-icons/fi'
 
 export const SignUpForm = () => {
-  const { error, errors, formSubmitHandler, register, submitting } = useAuth({
-    type: 'signup',
-  })
+  const { error, errors, formSubmitHandler, register, submitting, getValues } =
+    useAuth({
+      type: 'signup',
+    })
 
   return (
     <form
@@ -26,7 +27,7 @@ export const SignUpForm = () => {
         size='text-xl'
         type='text'
         validations={{
-          required: 'You have to type something.',
+          required: 'Looks like you forgot to fill in your name.',
         }}
         errors={errors}
       />
@@ -54,7 +55,7 @@ export const SignUpForm = () => {
         size='text-xl'
         type='email'
         validations={{
-          required: 'You have to type something.',
+          required: 'Please enter your email, we will keep it safe.',
         }}
         errors={errors}
       />
@@ -68,7 +69,7 @@ export const SignUpForm = () => {
         size='text-xl'
         type='password'
         validations={{
-          required: 'You have to type something.',
+          required: 'You must protect your account',
         }}
         errors={errors}
       />
@@ -76,13 +77,21 @@ export const SignUpForm = () => {
       <AuthInput
         register={register}
         Icon={FiLock}
-        id='confirmPass'
+        id='confirmPassword'
         label='Confirm Password'
         placeholder='password'
         size='text-xl'
         type='password'
         validations={{
           required: 'You have to type something.',
+          validate: {
+            isSameAsPass(val) {
+              return (
+                val === getValues('password') ||
+                'Looks like somebody else trying to taking over your account.'
+              )
+            },
+          },
         }}
         errors={errors}
       />

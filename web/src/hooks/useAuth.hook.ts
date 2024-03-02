@@ -12,6 +12,7 @@ export const useAuth = ({ type }: AuthHookProps) => {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
   } = useForm()
   const router = useRouter()
 
@@ -48,5 +49,5 @@ export const useAuth = ({ type }: AuthHookProps) => {
 
   const formSubmitHandler = handleSubmit(authHandler)
 
-  return { register, errors, error, formSubmitHandler, submitting }
+  return { register, errors, error, formSubmitHandler, submitting, getValues }
 }
