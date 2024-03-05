@@ -4,7 +4,7 @@ import { ExpenseModel } from '@/models/expense.model'
 import { connectDB } from '../db'
 import { IExpense } from '../types/actions.types'
 import { ActionResponse } from '../types/server.types'
-import { errorHandler } from '../errorHandler'
+import { errorHandler } from '../response'
 
 export const newExpense = async (expense: IExpense) => {
   console.clear()

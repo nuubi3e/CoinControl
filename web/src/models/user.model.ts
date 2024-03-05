@@ -1,8 +1,14 @@
-import { IUserModel, IUserSchema } from '@/lib/types/models.types'
+import {
+  IUserInstanceMethods,
+  IUserModel,
+  IUserSchema,
+} from '@/lib/types/models.types'
 import { Schema, model, models } from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { AES, generateOTP } from '@/lib/util'
+import { EncOTPPayload } from '@/lib/types/server.types'
 
-const userSchema = new Schema<IUserSchema, IUserModel, {}>(
+const userSchema = new Schema<IUserSchema, IUserModel, IUserInstanceMethods>(
   {
     username: {
       type: String,
@@ -27,27 +33,26 @@ const userSchema = new Schema<IUserSchema, IUserModel, {}>(
       required: [true, 'You must protect your account'],
       minlength: [8, 'Password should contain at least 8 characters'],
     },
-    confirmPassword: {
-      type: String,
-      required: [
-        true,
-        'Looks like somebody else trying to taking over your account.',
-      ],
-    },
     status: {
       type: String,
-      enum: ['active', 'registered'],
+      enum: ['verified', 'registered'],
       default: 'registered',
+    },
+    verification: {
+      type: {
+        count: Number,
+        retryTime: Date,
+      },
+      default: { count: 1 },
     },
   },
   { timestamps: true }
 )
 
-// Middleware to encrypt password before storing in DB
+// Middleware to encrypt password
 userSchema.pre('save', async function (next) {
-  this.confirmPassword = undefined
-  // this middle will always run then this model will be called
-  // To avoid calling bcrypt on every save we only call it if password is going to change
+  // this middleware will always run then this model will be called on save mode
+  // To avoid calling bcrypt on every save we only call it when password is going to change.
   if (!this.isModified('password')) return next()
 
   const salt = await bcrypt.genSalt(13)
@@ -57,6 +62,19 @@ userSchema.pre('save', async function (next) {
 
   next()
 })
+
+userSchema.methods.generateUserOTP = function (expireTimeInMinutes) {
+  const otp = generateOTP()
+  const expiresIn = new Date().getTime() + expireTimeInMinutes * 60 * 10000
+  const encPayload = JSON.stringify({
+    id: this._id.toString(),
+    otp,
+    expireTime: new Date(expiresIn),
+  } as EncOTPPayload)
+  const key = AES.encrypt(encPayload)
+
+  return { expireTime: new Date(expiresIn), key, otp }
+}
 
 export const UserModel = (models.m_users ||
   model('m_users', userSchema)) as IUserModel

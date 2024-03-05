@@ -15,6 +15,10 @@ const categorySchema = new Schema<ICategoriesSchema, ICategoryModel>(
       type: String,
       required: [true, 'UserId is required'],
     },
+    type: {
+      type: String,
+      enum: ['expense', 'income'],
+    },
   },
   { timestamps: true }
 )

@@ -1,6 +1,7 @@
 import { Orbitron, IBM_Plex_Sans } from 'next/font/google'
 import './globals.scss'
 import type { Metadata } from 'next'
+import ToastContainer from '@/components/ToastContainer'
 
 // FONT VARIABLES
 const orbitron = Orbitron({
@@ -32,7 +33,11 @@ export default function RootLayout({
     <html
       lang='en'
       className={`${orbitron.variable} ${ibm_plex_sans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <ToastContainer />
+        <section id='modals'></section>
+        {children}
+      </body>
     </html>
   )
 }

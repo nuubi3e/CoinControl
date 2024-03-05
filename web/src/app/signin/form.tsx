@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth.hook'
 import AuthInput from '@/components/AuthInput'
 
 export const SignInForm = () => {
-  const { error, errors, formSubmitHandler, register, submitting } = useAuth({
+  const { errors, formSubmitHandler, register, submitting } = useAuth({
     type: 'signin',
   })
 

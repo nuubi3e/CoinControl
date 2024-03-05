@@ -5,11 +5,7 @@ const otpSchema = new Schema<IOTPSchema, IOTPModel>({
   expireTime: {
     type: Date,
   },
-  otp: {
-    type: Number,
-    required: [true, 'OTP is required'],
-  },
-  userId: {
+  key: {
     type: String,
     required: [true, 'UserId is required'],
   },

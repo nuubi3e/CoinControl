@@ -6,16 +6,28 @@ export interface IUserSchema {
   fullname: string
   emailId: string
   password: string
-  confirmPassword: string | undefined
-  status: 'active' | 'registered'
+  status: 'verified' | 'registered'
+  verification:
+    | {
+        count: number
+        retryTime: Date
+      }
+    | undefined
 }
 
-export type IUserModel = Model<IUserSchema, {}, {}>
+export interface IUserInstanceMethods {
+  generateUserOTP: (expireTimeMinutes: number) => {
+    key: string
+    expireTime: Date
+    otp: number
+  }
+}
+
+export type IUserModel = Model<IUserSchema, {}, IUserInstanceMethods>
 
 export interface IOTPSchema {
-  userId: string
+  key: string
   expireTime: Date
-  otp: number
 }
 
 export type IOTPModel = Model<IOTPSchema, {}, {}>
@@ -46,6 +58,7 @@ export interface ICategoriesSchema {
   userId: string
   name: string
   picture: string
+  type: 'expense' | 'income'
 }
 
 export type ICategoryModel = Model<ICategoriesSchema, {}, {}>

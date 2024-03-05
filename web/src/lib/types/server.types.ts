@@ -6,3 +6,9 @@ export type ActionResponse<Response> = {
   ok: boolean
   data?: Response
 }
+
+export interface EncOTPPayload {
+  otp: number
+  id: string
+  expireTime: Date
+}
