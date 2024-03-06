@@ -44,7 +44,7 @@ export const POST = async (req: NextRequest) => {
 
     // encrypting user info using jwt
     const authToken = jwt.sign(userPayload, process.env.JWT_SECRET as string, {
-      expiresIn: `${SESSION_EXPIRES_DAYS}s`,
+      expiresIn: `${SESSION_EXPIRES_DAYS}d`,
     })
 
     const responseObj = Response.success({

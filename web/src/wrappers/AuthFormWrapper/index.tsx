@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { FC, ReactNode } from 'react'
 import BGImg from '@/assets/background.jpg'
+import Logo from '@/assets/logo.svg'
 
 interface AuthFormWrapperProps {
   children: ReactNode
@@ -28,7 +29,7 @@ const AuthFormWrapper: FC<AuthFormWrapperProps> = ({
           </h1>
           <div className='self-stretch w-[2px] bg-white' />
           <Image
-            src={'/images/logo.svg'}
+            src={Logo}
             width={120}
             height={100}
             alt='CoinControl Logo'
