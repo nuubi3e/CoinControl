@@ -5,7 +5,7 @@ import AuthInput from '@/components/AuthInput'
 import { IoMailOutline } from 'react-icons/io5'
 import { TbTxt } from 'react-icons/tb'
 import { FiUnlock, FiLock } from 'react-icons/fi'
-import OTPModel from '@/components/modals/OTPModel'
+import OTPModel from '@/components/modals/OTPModal'
 import { useState } from 'react'
 
 export const SignUpForm = () => {
