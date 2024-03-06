@@ -35,6 +35,13 @@ export class Response {
       error.message = err.message.split(': ').at(-1) as string
     }
 
+    // handling Token Error
+    if (err?.name === 'JsonWebTokenError') {
+      error.statusCode = 401 // Un Authorized
+      error.status = 'fail'
+      error.message = err.message
+    }
+
     // handling Wrong ID Error
     if (err?.name === 'CastError') {
       error.statusCode = 404 // NOT FOUND ERROR CODE

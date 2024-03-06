@@ -23,7 +23,7 @@ export const SignUpForm = () => {
 
   return (
     <>
-      <OTPModel otp={OTPData} show={showModal} />
+      <OTPModel otp={OTPData} userInp={getValues()} show={showModal} />
       <form
         onSubmit={formSubmitHandler}
         noValidate
@@ -114,10 +114,10 @@ export const SignUpForm = () => {
         </button>
         <button
           type='button'
-          onClick={() => setShowModal(true)}
           disabled={submitting}
+          onClick={() => setShowModal(true)}
           className='self-stretch h-[50px] outline-none rounded-xl bg-primary text-white text-lg mt-7 disabled:bg-gray-400'>
-          {submitting ? 'Logging...' : 'SignUp'}
+          {submitting ? 'Logging...' : 'Show OTP MOdal'}
         </button>
       </form>
     </>

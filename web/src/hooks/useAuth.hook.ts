@@ -1,4 +1,5 @@
 import { OTPInfo } from '@/lib/types/client.types'
+import { connectToAPI } from '@/lib/util.client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -27,26 +28,17 @@ export function useAuth({ type }: AuthHookProps) {
   const authHandler = async (userInp: any) => {
     setSubmitting(true)
     try {
-      console.log('I am here')
-      const res = await fetch(`/api/${type}`, {
+      const data = await connectToAPI({
+        endpoint: `auth/${type}`,
+        payload: JSON.stringify(userInp),
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userInp),
       })
 
-      if (!res.ok) {
-        const error = JSON.parse(await res.text())
-
-        throw new Error(error.message)
-      }
-
-      const data = await res.json()
-
-      console.log(data)
       // if this hook is going to use in login page then we return and push the user to home page
-      if (type === 'signin') return router.push('/')
+      if (type === 'signin') {
+        toast.success(data.message)
+        return router.push('/')
+      }
 
       // If type is signup
       // we create a Object contains data to show otp screen and payload to verify otp
@@ -56,7 +48,6 @@ export function useAuth({ type }: AuthHookProps) {
         showScreen: true,
       })
     } catch (err: any) {
-      console.error(err)
       toast.error(err.message)
     } finally {
       setSubmitting(false)

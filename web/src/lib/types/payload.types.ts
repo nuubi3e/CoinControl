@@ -10,3 +10,11 @@ export interface ILoginPayload {
   username: string
   password: string
 }
+
+export interface UserSession {
+  id: string
+  name: string
+  username: string
+  picture: string
+  email: string
+}

@@ -1,6 +1,5 @@
 'use server'
 import { connectDB } from '@/lib/db'
-import { ActionResponse } from '../types/server.types'
 
 export const dummy = async () => {
   console.log('I AM HERE')

@@ -2,7 +2,7 @@ import { connectDB } from '@/lib/db'
 import { Response } from '@/lib/response'
 import { INewUserPayload } from '@/lib/types/payload.types'
 import { EncOTPPayload } from '@/lib/types/server.types'
-import { AES, ServerError } from '@/lib/util'
+import { AES, ServerError } from '@/lib/util.server'
 import { UserModel } from '@/models/user.model'
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
@@ -16,7 +16,6 @@ export const POST = async (req: NextRequest) => {
       'dummy',
       'mongodb+srv://nuubi3e:6lJrQhQ3ryRUwlwr@cluster0.jyzo3h4.mongodb.net/?retryWrites=true&w=majority'
     )
-    console.clear()
 
     const body = (await req.json()) as INewUserPayload
 
@@ -32,7 +31,7 @@ export const POST = async (req: NextRequest) => {
       if (user?.status === 'verified')
         throw new ServerError('User Already Exists', 409)
 
-      // If not then update the data coming from frontend and generate OTP
+      // If user is not verified then update the data coming from frontend and generate OTP
       user.username = body.username
       user.emailId = body.emailId
       user.password = body.password
@@ -41,8 +40,6 @@ export const POST = async (req: NextRequest) => {
       user.verification!.count += 1
 
       await user.save()
-
-      console.log(user)
 
       // if user register count is equal or greater than 4 then we add cooldowntime
       if (user.verification!.count >= 6) {
@@ -60,12 +57,12 @@ export const POST = async (req: NextRequest) => {
         }
         // if there is no retry time then we add one
         else {
-          const coolDownTime = new Date().getTime() + 2 * 60 * 60 * 1000
+          const coolDownTime = new Date().getTime() + 24 * 60 * 60 * 1000 // seting cooldown time to 24 hours
           user.verification!.retryTime = new Date(coolDownTime)
 
           await user.save()
           throw new ServerError(
-            'You have exceeded the limit please try again after 2 hours',
+            'You have exceeded the registeration limit please try again after 24 hours',
             400
           )
         }
@@ -88,7 +85,7 @@ export const POST = async (req: NextRequest) => {
     const expireInTime = 5 // OTP Expires in 5 minutes
     const OTP = user!.generateUserOTP(expireInTime)
 
-    // Sending OTP on Mail
+    // Sending OTP on Mail using nodemailer
     const mailTransporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
@@ -107,12 +104,11 @@ export const POST = async (req: NextRequest) => {
       },
       to: body.emailId,
       subject: BRAND_NAME + ' Registration',
-      text: '',
-      html: '',
+      text: `OTP is ${OTP.otp}`,
+      html: `<h1>OTP is ${OTP.otp}</h1>`,
     }
 
-    const info = await mailTransporter.sendMail(mailOptions)
-    console.log(info)
+    await mailTransporter.sendMail(mailOptions)
     // ........
 
     // Disconnecting db
@@ -141,7 +137,6 @@ export const PUT = async (req: NextRequest) => {
       'dummy',
       'mongodb+srv://nuubi3e:6lJrQhQ3ryRUwlwr@cluster0.jyzo3h4.mongodb.net/?retryWrites=true&w=majority'
     )
-    console.clear()
 
     const key = req.headers.get('authorization')
 
@@ -151,7 +146,7 @@ export const PUT = async (req: NextRequest) => {
     const body = (await req.json()) as { otp: number }
 
     // checking OTP
-    if (!body?.otp) throw new ServerError('Please provide an OTP.', 400)
+    if (!body?.otp) throw new ServerError('Please provide an OTP.', 404)
 
     // if decryption failed then we can't able to parse the data and throws an error
     const decOTP = JSON.parse(AES.decrypt(key)) as EncOTPPayload
@@ -178,7 +173,7 @@ export const PUT = async (req: NextRequest) => {
 
     const response = Response.success({
       message: 'User Registered Successfully',
-      statusCode: 200,
+      statusCode: 201,
       data: undefined,
     })
     return NextResponse.json(response, { status: 200 })

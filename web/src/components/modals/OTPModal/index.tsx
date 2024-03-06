@@ -6,51 +6,48 @@ import { createPortal } from 'react-dom'
 import toast from 'react-hot-toast'
 import { motion as m } from 'framer-motion'
 import { LuLoader2 } from 'react-icons/lu'
+import { connectToAPI, encodeEmail } from '@/lib/util.client'
+import { log } from '@/lib/log'
 
 interface OTPModelProps {
   otp: OTPInfo
+  userInp: any
   show: boolean
 }
 
-const OTPModel: FC<OTPModelProps> = ({ otp, show }) => {
+const RESENT_OTP_TIME = 45
+let interval: NodeJS.Timeout
+
+const OTPModel: FC<OTPModelProps> = ({ otp, userInp, show }) => {
   const [verifyingOTP, setVerifyingOTP] = useState(false)
+  const [retryCount, setRetryCount] = useState(2) // user can resend otp only 2 times
   const modalRef = useRef<HTMLElement | null>(null)
+  const [authKey, setAuthKey] = useState(otp.key)
   const router = useRouter()
   const [OTP, setOTP] = useState(Array.from({ length: 6 }).map(() => ''))
 
   const verifyOTP = async () => {
     setVerifyingOTP(true)
     const isValid = !isNaN(+OTP.join('')) && OTP.join('').length === 6
-    console.log(OTP)
+    log(OTP)
     try {
       if (!isValid) throw new Error('Please Enter proper OTP')
 
-      console.log(+OTP.join(''))
-      const res = await fetch('/api/signup', {
+      log(+OTP.join(''))
+
+      const data = await connectToAPI({
+        endpoint: 'auth/signup',
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: otp.key,
-        },
-        body: JSON.stringify({
-          otp: +OTP.join(''),
-        }),
+        extraHeaders: { Authorization: authKey || otp.key },
+        payload: JSON.stringify({ otp: +OTP.join('') }),
       })
 
-      if (!res.ok) {
-        const error = JSON.parse(await res.text())
-
-        throw new Error(error.message)
-      }
-
-      const data = await res.json()
-
-      console.log(data)
+      log(data)
 
       toast.success('Registeration Successful, Please Login.')
 
+      // pushing to login after successful verification.
       router.push('/signin')
-      // pushing to login
     } catch (err: any) {
       console.error(err)
       setOTP(['', '', '', '', '', ''])
@@ -73,6 +70,23 @@ const OTPModel: FC<OTPModelProps> = ({ otp, show }) => {
     modalRef.current = document.getElementById('modals') as HTMLElement
   }, [])
 
+  const resendOTP = async () => {
+    try {
+      const data = await connectToAPI({
+        endpoint: 'auth/signup',
+        method: 'POST',
+        payload: JSON.stringify({ ...userInp }),
+      })
+
+      setAuthKey(data.data.key)
+
+      toast.success('New OTP Sent Successfully.')
+    } catch (err) {
+      console.error(err)
+      toast.success('Something went wrong.')
+    }
+  }
+
   return otp.showScreen && modalRef.current
     ? createPortal(
         <div className='z-[1000] w-[100dvw] h-[100dvh] bg-black fixed right-0 bottom-0 bg-opacity-40 backdrop-blur-[4px] p-5 pt-10 max-[450px]:pt-0'>
@@ -88,7 +102,7 @@ const OTPModel: FC<OTPModelProps> = ({ otp, show }) => {
               <p className='flex flex-col items-center text-gray-600 text-sm'>
                 Please Enter the verification we sent on{' '}
                 <strong className='text-gray-900 font-semibold'>
-                  xxxxi3e@gmail.com
+                  {encodeEmail(otp.email)}
                 </strong>{' '}
               </p>
             </div>
@@ -146,6 +160,12 @@ const OTPModel: FC<OTPModelProps> = ({ otp, show }) => {
                   </div>
                 ))}
               </div>
+              {otp.showScreen && retryCount > 0 && (
+                <OTPTimer
+                  resendOTP={resendOTP}
+                  reduceRetryCount={() => setRetryCount((lst) => lst - 1)}
+                />
+              )}
 
               <button
                 type='submit'
@@ -166,3 +186,56 @@ const OTPModel: FC<OTPModelProps> = ({ otp, show }) => {
 }
 
 export default OTPModel
+
+const OTPTimer = ({
+  resendOTP,
+  reduceRetryCount,
+}: {
+  resendOTP: () => void
+  reduceRetryCount: () => void
+}) => {
+  const [otpTimer, setOtpTimer] = useState(RESENT_OTP_TIME)
+  const [showResend, setShowResend] = useState(false)
+
+  useEffect(() => {
+    if (showResend) return
+
+    if (otpTimer <= 0) {
+      clearInterval(interval)
+      setShowResend(true)
+      return
+    }
+
+    clearInterval(interval)
+    interval = setInterval(() => {
+      setOtpTimer((lst) => lst - 1)
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [otpTimer, showResend])
+
+  return (
+    <div className='flex justify-end'>
+      {showResend && (
+        <button
+          type='button'
+          onClick={() => {
+            resendOTP()
+            reduceRetryCount()
+            setShowResend(false)
+            setOtpTimer(RESENT_OTP_TIME)
+          }}
+          className='bg-violet-500 font-medium px-3 py-1 text-violet-50 rounded text-sm hover:bg-violet-600'>
+          Resend OTP
+        </button>
+      )}
+      {!showResend && (
+        <p className='text-gray-400 font-medium text-sm'>
+          Resend in {otpTimer} seconds
+        </p>
+      )}
+    </div>
+  )
+}
