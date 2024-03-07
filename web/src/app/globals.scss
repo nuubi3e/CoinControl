@@ -55,3 +55,14 @@
     @apply translate-y-[-170%] text-[12px] text-opacity-90;
   }
 }
+
+.check {
+  display: none;
+}
+
+.cus-checkbox:checked ~ label .uncheck {
+  display: none;
+}
+.cus-checkbox:checked ~ label .check {
+  display: block;
+}

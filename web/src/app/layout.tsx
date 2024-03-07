@@ -2,6 +2,10 @@ import { Orbitron, IBM_Plex_Sans } from 'next/font/google'
 import './globals.scss'
 import type { Metadata } from 'next'
 import ToastContainer from '@/components/ToastContainer'
+import dynamic from 'next/dynamic'
+const AuthWrapper = dynamic(() => import('@/wrappers/AuthWrapper'), {
+  ssr: false,
+})
 
 // FONT VARIABLES
 const orbitron = Orbitron({
@@ -36,7 +40,7 @@ export default function RootLayout({
       <body>
         <ToastContainer />
         <section id='modals'></section>
-        {children}
+        <AuthWrapper>{children}</AuthWrapper>
       </body>
     </html>
   )

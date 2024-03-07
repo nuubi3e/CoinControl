@@ -7,9 +7,10 @@ import toast from 'react-hot-toast'
 
 interface AuthHookProps {
   type: 'signin' | 'signup'
+  redirectURL?: string
 }
 
-export function useAuth({ type }: AuthHookProps) {
+export function useAuth({ type, redirectURL }: AuthHookProps) {
   const [submitting, setSubmitting] = useState(false)
   const [OTPData, setOTPData] = useState<OTPInfo>({
     showScreen: false,
@@ -37,7 +38,7 @@ export function useAuth({ type }: AuthHookProps) {
       // if this hook is going to use in login page then we return and push the user to home page
       if (type === 'signin') {
         toast.success(data.message)
-        return router.push('/')
+        return router.push(redirectURL || '/')
       }
 
       // If type is signup

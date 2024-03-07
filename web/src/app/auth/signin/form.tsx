@@ -4,10 +4,13 @@ import { GoLock } from 'react-icons/go'
 import { LuUser2 } from 'react-icons/lu'
 import { useAuth } from '@/hooks/useAuth.hook'
 import AuthInput from '@/components/AuthInput'
+import { MdCheckBoxOutlineBlank } from 'react-icons/md'
+import { TbCheckbox } from 'react-icons/tb'
 
-export const SignInForm = () => {
+export const SignInForm = ({ redirectURL }: { redirectURL: string }) => {
   const { errors, formSubmitHandler, register, submitting } = useAuth({
     type: 'signin',
+    redirectURL,
   })
 
   return (
@@ -47,8 +50,20 @@ export const SignInForm = () => {
         <div
           className='flex items-center gap-2 cursor-pointer text-white text-opacity-80 '
           role='button'>
-          <input type='checkbox' id='remember' />
-          <label htmlFor='remember'>Remember me</label>
+          <input
+            type='checkbox'
+            id='remember'
+            {...register('rememberMe')}
+            className='hidden cus-checkbox'
+            defaultChecked
+          />
+          <label
+            htmlFor='remember'
+            className='flex items-center gap-2 select-none cursor-pointer'>
+            <MdCheckBoxOutlineBlank className='text-white text-lg uncheck' />
+            <TbCheckbox className='text-white text-lg check' />
+            Remember me
+          </label>
         </div>
 
         <Link

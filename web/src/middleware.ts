@@ -1,19 +1,17 @@
+import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { log } from './lib/log'
 
-export const middleware = async (req: NextRequest) => {
-  try {
-    log(req.nextUrl)
-    const res = await fetch('http://localhost:3000/api/verify')
+export const middleware = (req: NextRequest) => {
+  const requestedURL = req.nextUrl.pathname
+  log(req.cookies)
+  const authToken = cookies().get('auth-token')?.value || ''
 
-    if (!res.ok) throw new Error('in valid request')
-
-    const data = await res.json()
-    log(data)
-  } catch (err) {
-    log('ERROR: ', err)
-    return NextResponse.redirect(new URL('/signin', req.url))
-  }
+  if (!authToken)
+    // if there is no token then we redirecting user to signin with redirect url as search params
+    return NextResponse.redirect(
+      new URL(`/auth/signin?redirect=${requestedURL}`, req.url)
+    )
 }
 
 export const config = {
@@ -25,6 +23,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|icon.png|signup|signin|lib).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|icon.png|auth).*)',
   ],
 }

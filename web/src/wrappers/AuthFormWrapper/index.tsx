@@ -41,7 +41,7 @@ const AuthFormWrapper: FC<AuthFormWrapperProps> = ({
 
         <p className='text-white'>
           {redirectUrl === 'signin' ? 'Already Join Us' : 'New Here'}?{' '}
-          <Link href={`/${redirectUrl}`} className='underline'>
+          <Link href={`/auth/${redirectUrl}`} className='underline'>
             {redirectUrl === 'signin' ? 'Login' : 'Create New Account'}
           </Link>
         </p>

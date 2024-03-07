@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { log } from './log'
 import { cookies } from 'next/headers'
 import { UserSession } from './types/payload.types'
 
@@ -10,8 +9,6 @@ export const getSession: GetSession = () => {
     const cookie = cookies()
     const authToken = cookie.get('auth-token')?.value as string
 
-    log(cookie)
-
     // if no cookie available
     if (!authToken) throw new Error('Un Authorized')
 
@@ -20,7 +17,6 @@ export const getSession: GetSession = () => {
 
     return user as UserSession
   } catch (err) {
-    log('ERROR: ', err)
     return null
   }
 }

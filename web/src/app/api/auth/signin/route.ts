@@ -8,15 +8,18 @@ import jwt from 'jsonwebtoken'
 import { UserSession } from '@/lib/types/payload.types'
 import { connectDB } from '@/lib/db'
 
-const SESSION_EXPIRES_DAYS = 25
-
 export const POST = async (req: NextRequest) => {
   try {
+    console.clear()
     const db = await connectDB(
       'dummy',
       'mongodb+srv://nuubi3e:6lJrQhQ3ryRUwlwr@cluster0.jyzo3h4.mongodb.net/?retryWrites=true&w=majority'
     )
-    const body = (await req.json()) as { username: string; password: string }
+    const body = (await req.json()) as {
+      username: string
+      password: string
+      rememberMe: boolean
+    }
 
     log(body)
 
@@ -24,7 +27,7 @@ export const POST = async (req: NextRequest) => {
 
     const user = await UserModel.findOne({
       $or: [{ username: body.username }, { emailId: body.username }],
-    })
+    }).select('-__v')
 
     if (!user) throw new ServerError('No User Found', 404)
 
@@ -42,22 +45,28 @@ export const POST = async (req: NextRequest) => {
       picture: user.picture,
     }
 
-    // encrypting user info using jwt
-    const authToken = jwt.sign(userPayload, process.env.JWT_SECRET as string, {
-      expiresIn: `${SESSION_EXPIRES_DAYS}d`,
-    })
-
     const responseObj = Response.success({
       data: undefined,
-      message: 'Login Successful',
+      message: 'Login Successfull',
       statusCode: 200,
     })
     const response = NextResponse.json(responseObj, { status: 200 })
 
-    // generating expiry time.
+    // IF user selected remember me option then we keep user logged in for 25 days otherwise we logged in user for 1.5hours
+    const TOKEN_EXPIRY_TIME = body?.rememberMe ? '26d' : '2h'
+    const SESSION_EXPIRES_TIME_IN_MS = body?.rememberMe
+      ? 25 * 24 * 60 * 60 * 1000
+      : 1.5 * 60 * 60 * 1000
+
+    // encrypting user info using jwt
+    const authToken = jwt.sign(userPayload, process.env.JWT_SECRET!, {
+      expiresIn: TOKEN_EXPIRY_TIME,
+    })
+
+    // Generating expiry time.
     const curDate = Date.now() // this will return cur time in milliseconds
-    const expireTimeInMilliseconds = SESSION_EXPIRES_DAYS * 24 * 60 * 60 * 1000
-    const expiresIn = new Date(curDate + expireTimeInMilliseconds)
+    const expiresIn = new Date(curDate + SESSION_EXPIRES_TIME_IN_MS)
+
     // Storing JWT in http-only cookie
     response.cookies.set('auth-token', authToken, {
       httpOnly: true,

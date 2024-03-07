@@ -1,3 +1,4 @@
+import { log } from './log'
 import { ActionResponse } from './types/server.types'
 
 export class Response {
@@ -15,9 +16,8 @@ export class Response {
 
   static error(err: any) {
     console.clear()
-
-    console.log(err.name)
-    console.log(err.message)
+    log(err.name)
+    log('BEF ERROR: ', err)
     // Creating a user friendly error object
     const error: ActionResponse<undefined> = {
       status: err?.status || 'error',
@@ -62,7 +62,7 @@ export class Response {
       error.message = message
     }
 
-    console.log(error)
+    log('SERVER ERROR: ', error)
 
     return error
   }
