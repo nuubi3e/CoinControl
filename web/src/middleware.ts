@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { log } from './lib/log'
+import { log } from './lib/misc/log'
 
 export const middleware = (req: NextRequest) => {
   const requestedURL = req.nextUrl.pathname

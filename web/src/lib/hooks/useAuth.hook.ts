@@ -1,5 +1,5 @@
 import { OTPInfo } from '@/lib/types/client.types'
-import { connectToAPI } from '@/lib/util.client'
+import { connectToAPI } from '@/lib/utils/client.utils'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

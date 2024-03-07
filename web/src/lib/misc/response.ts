@@ -1,5 +1,5 @@
 import { log } from './log'
-import { ActionResponse } from './types/server.types'
+import { ActionResponse } from '../types/server.types'
 
 export class Response {
   constructor() {}

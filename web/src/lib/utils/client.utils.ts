@@ -1,4 +1,4 @@
-import { log } from './log'
+import { log } from '../misc/log'
 
 export const encodeEmail = (email: string) => {
   const spliEmail = email.split('@')

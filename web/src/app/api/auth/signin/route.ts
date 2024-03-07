@@ -1,12 +1,12 @@
-import { log } from '@/lib/log'
-import { Response } from '@/lib/response'
-import { ServerError } from '@/lib/util.server'
+import { log } from '@/lib/misc/log'
+import { Response } from '@/lib/misc/response'
+import { ServerError } from '@/lib/utils/server.utils'
 import { UserModel } from '@/models/user.model'
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { UserSession } from '@/lib/types/payload.types'
-import { connectDB } from '@/lib/db'
+import { connectDB } from '@/lib/misc/db'
 
 export const POST = async (req: NextRequest) => {
   try {

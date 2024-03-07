@@ -1,6 +1,6 @@
 'use client'
 import { LuUser2 } from 'react-icons/lu'
-import { useAuth } from '@/hooks/useAuth.hook'
+import { useAuth } from '@/lib/hooks/useAuth.hook'
 import AuthInput from '@/components/AuthInput'
 import { IoMailOutline } from 'react-icons/io5'
 import { TbTxt } from 'react-icons/tb'

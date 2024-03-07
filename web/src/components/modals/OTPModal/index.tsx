@@ -6,8 +6,8 @@ import { createPortal } from 'react-dom'
 import toast from 'react-hot-toast'
 import { motion as m } from 'framer-motion'
 import { LuLoader2 } from 'react-icons/lu'
-import { connectToAPI, encodeEmail } from '@/lib/util.client'
-import { log } from '@/lib/log'
+import { connectToAPI, encodeEmail } from '@/lib/utils/client.utils'
+import { log } from '@/lib/misc/log'
 
 interface OTPModelProps {
   otp: OTPInfo

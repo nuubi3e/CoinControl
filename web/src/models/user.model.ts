@@ -5,7 +5,7 @@ import {
 } from '@/lib/types/models.types'
 import { Schema, model, models } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { AES, generateOTP } from '@/lib/util.server'
+import { AES, generateOTP } from '@/lib/utils/server.utils'
 import { EncOTPPayload } from '@/lib/types/server.types'
 
 const userSchema = new Schema<IUserSchema, IUserModel, IUserInstanceMethods>(

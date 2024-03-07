@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import AuthFormWrapper from '@/wrappers/AuthFormWrapper'
 import { SignInForm } from './form'
-import { log } from '@/lib/log'
+import { log } from '@/lib/misc/log'
 
 export const metadata: Metadata = {
   title: 'CoinControl | Login',

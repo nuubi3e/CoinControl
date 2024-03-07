@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { GoLock } from 'react-icons/go'
 import { LuUser2 } from 'react-icons/lu'
-import { useAuth } from '@/hooks/useAuth.hook'
+import { useAuth } from '@/lib/hooks/useAuth.hook'
 import AuthInput from '@/components/AuthInput'
 import { MdCheckBoxOutlineBlank } from 'react-icons/md'
 import { TbCheckbox } from 'react-icons/tb'

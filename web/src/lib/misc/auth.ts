@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { UserSession } from './types/payload.types'
+import { UserSession } from '../types/payload.types'
 
 // function to get user session
 type GetSession = () => UserSession | null

@@ -3,6 +3,7 @@ import './globals.scss'
 import type { Metadata } from 'next'
 import ToastContainer from '@/components/ToastContainer'
 import dynamic from 'next/dynamic'
+import ReduxProvider from '@/lib/store/Provider'
 const AuthWrapper = dynamic(() => import('@/wrappers/AuthWrapper'), {
   ssr: false,
 })
@@ -40,7 +41,9 @@ export default function RootLayout({
       <body>
         <ToastContainer />
         <section id='modals'></section>
-        <AuthWrapper>{children}</AuthWrapper>
+        <ReduxProvider>
+          <AuthWrapper>{children}</AuthWrapper>
+        </ReduxProvider>
       </body>
     </html>
   )
