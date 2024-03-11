@@ -76,7 +76,7 @@ export const SignInForm = ({ redirectURL }: { redirectURL: string }) => {
       <button
         type='submit'
         disabled={submitting}
-        className='self-stretch h-[50px] rounded-xl bg-primary text-white text-lg mt-4 disabled:bg-gray-400'>
+        className='self-stretch h-[50px] rounded-full bg-primary text-white text-lg mt-4 disabled:bg-gray-400'>
         {submitting ? 'Logging...' : 'Login'}
       </button>
     </form>

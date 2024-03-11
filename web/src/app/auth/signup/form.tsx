@@ -6,10 +6,8 @@ import { IoMailOutline } from 'react-icons/io5'
 import { TbTxt } from 'react-icons/tb'
 import { FiUnlock, FiLock } from 'react-icons/fi'
 import OTPModel from '@/components/modals/OTPModal'
-import { useState } from 'react'
 
 export const SignUpForm = () => {
-  const [showModal, setShowModal] = useState(false)
   const {
     errors,
     formSubmitHandler,
@@ -23,7 +21,7 @@ export const SignUpForm = () => {
 
   return (
     <>
-      <OTPModel otp={OTPData} userInp={getValues()} show={showModal} />
+      <OTPModel otp={OTPData} userInp={getValues()} />
       <form
         onSubmit={formSubmitHandler}
         noValidate
@@ -109,15 +107,8 @@ export const SignUpForm = () => {
         <button
           type='submit'
           disabled={submitting}
-          className='self-stretch h-[50px] outline-none rounded-xl bg-primary text-white text-lg mt-7 disabled:bg-gray-400'>
+          className='self-stretch h-[50px] outline-none rounded-full bg-primary text-white text-lg mt-7 disabled:bg-gray-400'>
           {submitting ? 'Logging...' : 'SignUp'}
-        </button>
-        <button
-          type='button'
-          disabled={submitting}
-          onClick={() => setShowModal(true)}
-          className='self-stretch h-[50px] outline-none rounded-xl bg-primary text-white text-lg mt-7 disabled:bg-gray-400'>
-          {submitting ? 'Logging...' : 'Show OTP MOdal'}
         </button>
       </form>
     </>

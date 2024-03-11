@@ -2,67 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-.logo {
-  fill: white !important;
-}
-
-.signin {
-  @apply min-h-[100dvh] relative flex flex-col p-5 justify-between gap-5 items-center;
-
-  &__background {
-    @apply w-full h-full absolute top-0 left-0 z-[-1] object-cover object-center;
+@layer components {
+  .logo {
+    fill: white !important;
   }
 
-  &__box {
-    @apply z-10 w-[450px]  flex flex-col items-center max-[450px]:w-full bg-white bg-opacity-5 backdrop-blur-[20px] rounded-2xl p-10 border-[2px] border-white border-opacity-15;
+  .signin {
+    @apply min-h-[100dvh] relative flex flex-col p-5 justify-between gap-5 items-center;
 
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    &__background {
+      @apply w-full h-full absolute top-0 left-0 z-[-1] object-cover object-center;
+    }
+
+    &__box {
+      @apply z-10 w-[450px]  flex flex-col items-center max-[450px]:w-full bg-white bg-opacity-5 backdrop-blur-[20px] rounded-2xl p-10 border-[2px] border-white border-opacity-15;
+
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    &__input:placeholder-shown {
+      @apply border-opacity-20;
+    }
+
+    &__input {
+      @apply w-full border-b-2 border-white  bg-transparent text-white outline-none focus:border-opacity-75 transition-all placeholder:text-transparent;
+    }
+
+    &__input_box {
+      @apply flex h-[48px] w-full flex-row-reverse relative;
+    }
+
+    &__input:placeholder-shown ~ &__icon {
+      @apply border-opacity-20 text-opacity-50;
+    }
+
+    &__icon {
+      @apply grid place-items-center h-full pl-2 pr-3 text-white text-opacity-100 border-b-2 border-white transition-all;
+    }
+
+    &__input:focus ~ &__icon {
+      @apply border-opacity-75 text-opacity-100;
+    }
+
+    &__label {
+      @apply absolute text-white top-1/2 left-10 translate-y-[-170%] text-[12px] text-opacity-90 transition-all;
+    }
+
+    &__input:placeholder-shown ~ &__label {
+      @apply top-1/2 left-10 translate-y-[-50%] text-sm text-opacity-50;
+    }
+
+    &__input:focus ~ &__label {
+      @apply translate-y-[-170%] text-[12px] text-opacity-90;
+    }
   }
 
-  &__input:placeholder-shown {
-    @apply border-opacity-20;
+  .check {
+    display: none;
   }
 
-  &__input {
-    @apply w-full border-b-2 border-white  bg-transparent text-white outline-none focus:border-opacity-75 transition-all placeholder:text-transparent;
+  .cus-checkbox:checked ~ label .uncheck {
+    display: none;
+  }
+  .cus-checkbox:checked ~ label .check {
+    display: block;
   }
 
-  &__input_box {
-    @apply flex h-[48px] w-full flex-row-reverse relative;
+  .cus_scroll {
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
-
-  &__input:placeholder-shown ~ &__icon {
-    @apply border-opacity-20 text-opacity-50;
-  }
-
-  &__icon {
-    @apply grid place-items-center h-full pl-2 pr-3 text-white text-opacity-100 border-b-2 border-white transition-all;
-  }
-
-  &__input:focus ~ &__icon {
-    @apply border-opacity-75 text-opacity-100;
-  }
-
-  &__label {
-    @apply absolute text-white top-1/2 left-10 translate-y-[-170%] text-[12px] text-opacity-90 transition-all;
-  }
-
-  &__input:placeholder-shown ~ &__label {
-    @apply top-1/2 left-10 translate-y-[-50%] text-sm text-opacity-50;
-  }
-
-  &__input:focus ~ &__label {
-    @apply translate-y-[-170%] text-[12px] text-opacity-90;
-  }
-}
-
-.check {
-  display: none;
-}
-
-.cus-checkbox:checked ~ label .uncheck {
-  display: none;
-}
-.cus-checkbox:checked ~ label .check {
-  display: block;
 }

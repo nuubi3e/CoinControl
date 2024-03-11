@@ -1,5 +1,4 @@
 'use client'
-import { log } from '@/lib/misc/log'
 import { ReactNode } from 'react'
 
 /*

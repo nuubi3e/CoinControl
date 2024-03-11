@@ -1,10 +1,8 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { log } from './lib/misc/log'
 
 export const middleware = (req: NextRequest) => {
   const requestedURL = req.nextUrl.pathname
-  log(req.cookies)
   const authToken = cookies().get('auth-token')?.value || ''
 
   if (!authToken)

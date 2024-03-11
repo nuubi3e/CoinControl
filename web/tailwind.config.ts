@@ -16,7 +16,7 @@ const config: Config = {
       },
 
       colors: {
-        primary: '#CD069E',
+        primary: '#054A75',
       },
       fontFamily: {
         ibm: 'var(--font-ibm)',

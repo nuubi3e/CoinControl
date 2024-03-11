@@ -2,11 +2,9 @@ import { Orbitron, IBM_Plex_Sans } from 'next/font/google'
 import './globals.scss'
 import type { Metadata } from 'next'
 import ToastContainer from '@/components/ToastContainer'
-import dynamic from 'next/dynamic'
 import ReduxProvider from '@/lib/store/Provider'
-const AuthWrapper = dynamic(() => import('@/wrappers/AuthWrapper'), {
-  ssr: false,
-})
+import AuthChecker from '@/components/AuthChecker'
+import LeftNavbar from '@/components/LeftNavbar'
 
 // FONT VARIABLES
 const orbitron = Orbitron({
@@ -40,9 +38,15 @@ export default function RootLayout({
       className={`${orbitron.variable} ${ibm_plex_sans.variable}`}>
       <body>
         <ToastContainer />
+        <AuthChecker />
         <section id='modals'></section>
         <ReduxProvider>
-          <AuthWrapper>{children}</AuthWrapper>
+          {/* <div className='w-[100dvw] h-[100dvh] flex overflow-hidden bg-[#111]'> */}
+          {/* <LeftNavbar /> */}
+          {/* <main className='flex-1 overflow-y-scroll cus_scroll'> */}
+          {children}
+          {/* </main> */}
+          {/* </div> */}
         </ReduxProvider>
       </body>
     </html>

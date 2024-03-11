@@ -12,13 +12,12 @@ import { log } from '@/lib/misc/log'
 interface OTPModelProps {
   otp: OTPInfo
   userInp: any
-  show: boolean
 }
 
 const RESENT_OTP_TIME = 45
 let interval: NodeJS.Timeout
 
-const OTPModel: FC<OTPModelProps> = ({ otp, userInp, show }) => {
+const OTPModel: FC<OTPModelProps> = ({ otp, userInp }) => {
   const [verifyingOTP, setVerifyingOTP] = useState(false)
   const [retryCount, setRetryCount] = useState(2) // user can resend otp only 2 times
   const modalRef = useRef<HTMLElement | null>(null)
