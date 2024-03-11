@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import ToastContainer from '@/components/ToastContainer'
 import ReduxProvider from '@/lib/store/Provider'
 import AuthChecker from '@/components/AuthChecker'
-import LeftNavbar from '@/components/LeftNavbar'
 
 // FONT VARIABLES
 const orbitron = Orbitron({
@@ -40,14 +39,7 @@ export default function RootLayout({
         <ToastContainer />
         <AuthChecker />
         <section id='modals'></section>
-        <ReduxProvider>
-          {/* <div className='w-[100dvw] h-[100dvh] flex overflow-hidden bg-[#111]'> */}
-          {/* <LeftNavbar /> */}
-          {/* <main className='flex-1 overflow-y-scroll cus_scroll'> */}
-          {children}
-          {/* </main> */}
-          {/* </div> */}
-        </ReduxProvider>
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   )
